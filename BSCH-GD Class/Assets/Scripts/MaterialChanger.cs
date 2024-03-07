@@ -1,35 +1,31 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class MaterialChange : MonoBehaviour
+public class MaterialChanger : MonoBehaviour
 {
-    // List to hold all materials
-    private List<Material> materials = new List<Material>();
+    public Material testMat;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Find all MeshRenderers in this GameObject and its children
-        MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
+        testMat = GetComponent<MeshRenderer>().material;
 
-        // Iterate over each renderer and add its materials to the list
-        foreach (MeshRenderer renderer in renderers)
-        {
-            foreach (Material mat in renderer.materials) // Access all materials of the renderer
-            {
-                materials.Add(mat);
-            }
-        }
     }
 
-    // This method is called when the GameObject collides with another GameObject
-    public void OnCollisionEnter(Collision collision)
+    // Update is called once per frame
+    void Update()
     {
-        // Change the color of each material in the list
-        foreach (Material mat in materials)
-        {
-            mat.color = Random.ColorHSV(); // Set to a random color
-        }
+        
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+
+            testMat.color = Random.ColorHSV(); //changes the material's color to a random color
+
+        
     }
 }
