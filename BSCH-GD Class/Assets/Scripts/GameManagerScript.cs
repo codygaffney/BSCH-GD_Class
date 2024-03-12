@@ -7,10 +7,17 @@ public class GameManagerScript : MonoBehaviour
     public float health;
     public float score;
 
+    public Transform spawnPoint;
+
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
     // Start is called before the first frame update
     void Start()
     {
-        
+        spawnPoint = GameObject.FindGameObjectWithTag("Start").transform;
     }
 
     // Update is called once per frame
@@ -22,6 +29,11 @@ public class GameManagerScript : MonoBehaviour
     public void AddScore(float scoreToAdd)
     {
         score += scoreToAdd;
+    }
+
+    public void damageTaken(float damageTaken)
+    {
+        health -= damageTaken;
     }
 
 
