@@ -1,0 +1,37 @@
+Exercise 1
+
+Show an understanding of gameobjects, Unity Physics, collisions
+
+Exercise 2 
+
+Create a character controller in 2D
+
+Exercise 3
+
+Create a level that can be moved around in, with player animations and effectors e.g. platform effectors. Use Tilemap 2D
+
+Exercise 4
+
+Create a Game Manager gameobject that will control score and health. 
+Create a score pickup that increases the player score. Create a UI that displays the player's score and health. 
+Create checkpoints for the player, and a killzone that resets the player to the last checkpoint.
+
+HOMEWORK: Create a spike trap (or other) that damages the player -1 health Optional: add jump and fall animations to the player.
+
+Exercise 5
+Create an enemy with a finite state machine
+The enemy should damage the player when touching the player, similarly to the spike trap before
+The enemy should know where the player is in relation to itself, so it knows which direction to chase the player when the player is detected
+BONUS: have the animations hooked up so the enemy animates correctly, AND changes direction based on which way it is moving
+
+Exercise 6
+3D Level Design & 3D Character Controller with animations
+
+Exercise 7
+Navmesh & State Machines
+
+Exercise 8 
+Postprocessing & Lighting
+
+Week 9 - 12
+Study classes
