@@ -1,87 +1,138 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterControllerScript : MonoBehaviour
 {
-    public float maxSpeed;
+    [Header("Movement")]
+    public float maxSpeed = 5f;
+    public float acceleration = 50f;
+    public float sprintMultiplier = 1.5f;
+    private bool isSprinting = false;
 
-    public float acceleration;
+    [Header("Jumping")]
+    public float jumpForce = 300f;
+    private int jumpCount = 0;
+    public int maxJumpCount = 2;  // Allows for one jump and one double jump
 
+    [Header("Dashing")]
+    public float dashForce = 15f;
+    public float dashDuration = 0.3f;
+    private bool isDashing = false;
+    private bool canDash = true;  // Ensure only one dash until reset
+
+    [Header("Components")]
     public Rigidbody2D myRb;
-    public float jumpForce;
-    public bool isGrounded;
-
-    public float secondaryJumpForce;
-    public float secondaryJumpTime;
-
-    public bool secondaryJump;
-
     public Animator anim;
 
-    // Start is called before the first frame update
-    void Start()
+    private bool isGrounded;
+
+    private void Start()
     {
-        myRb = GetComponent<Rigidbody2D>(); // look for a component called Rigidbody2D and assign it to myRb
+        myRb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        anim.SetFloat("speed", Mathf.Abs(myRb.velocity.x)); // sets the speed parameter in the animator to the absolute value of the player's x velocity
-        
-        //animation flip code
-        if (Input.GetAxis("Horizontal")>0.1f) // if the player is moving to the right
-        {
-            anim.transform.localScale = new Vector3(1, 1, 1); // set the scale of the player to 1,1,1
-        }
-        if (Input.GetAxis("Horizontal") < -0.1f) // if the player is moving to the left
-        {
-            anim.transform.localScale = new Vector3(-1, 1, 1); // set the scale of the player to -1,1,1
-        }
-        //animation flip code end
-        
-        if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0.1f && Mathf.Abs(myRb.velocity.x) < maxSpeed) // if the absolute value of the input is greater than 0.1, and player is not moving faster than max Speed
-        {
-           myRb.AddForce(new Vector2(Input.GetAxis("Horizontal")*acceleration, 0), ForceMode2D.Force); //gets Input value and multiplies it by acceleration in the x direction.
-        }
-
-
+        HandleMovement();
     }
 
     private void Update()
     {
-        //JUMP CODE
-        if (isGrounded == true && Input.GetButtonDown("Jump")) // if the player is grounded and the jump button is pressed
-        {
-            myRb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse); // add a force in the y direction
-            StartCoroutine(SecondaryJump());
-        }
-
-        if (isGrounded == false && Input.GetButton("Jump") && secondaryJump == true)
-        {
-            myRb.AddForce(new Vector2(0, secondaryJumpForce), ForceMode2D.Force); //while the jump button is held, add a force in the y direction
-        }
-        //END JUMP CODE
+        HandleJump();
+        HandleDash();
+        UpdateAnimations();
     }
 
-    private void OnTriggerStay2D(Collider2D other) // as long as a collider is detected inside the trigger, the player is grounded
+    void HandleMovement()
     {
-        isGrounded = true;
+        if (isDashing)
+            return;
+
+        float inputX = Input.GetAxis("Horizontal");
+        isSprinting = Input.GetKey(KeyCode.LeftShift);
+
+        // Adjust speed for sprinting
+        float speed = isSprinting ? maxSpeed * sprintMultiplier : maxSpeed;
+
+        // Apply horizontal movement
+        if (Mathf.Abs(inputX) > 0.1f && Mathf.Abs(myRb.velocity.x) < speed)
+        {
+            myRb.AddForce(new Vector2(inputX * acceleration, 0), ForceMode2D.Force);
+        }
+
+        // Update animator speed
+        anim.SetFloat("speed", Mathf.Abs(myRb.velocity.x));
+
+        // Handle character flipping
+        if (inputX > 0.1f)
+            transform.localScale = new Vector3(1, 1, 1);
+        else if (inputX < -0.1f)
+            transform.localScale = new Vector3(-1, 1, 1);
     }
-    
-    private void OnTriggerExit2D(Collider2D other) // when the collider exits the trigger, the player is no longer grounded
+
+    void HandleJump()
+    {
+        if (Input.GetButtonDown("Jump"))
+        {
+            if (isGrounded || jumpCount < maxJumpCount)
+            {
+                myRb.velocity = new Vector2(myRb.velocity.x, 0); // Reset vertical velocity
+                myRb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+                anim.SetTrigger(jumpCount == 0 ? "Jump" : "DoubleJump");
+                jumpCount++;
+                isGrounded = false;  // Make sure we set isGrounded to false on jump
+            }
+        }
+    }
+
+    void HandleDash()
+    {
+        if (Input.GetKeyDown(KeyCode.E) && !isDashing && canDash)
+        {
+            StartCoroutine(PerformDash());
+            canDash = false;  // Disable further dashing until reset
+        }
+    }
+
+    IEnumerator PerformDash()
+    {
+        isDashing = true;
+        float originalGravity = myRb.gravityScale;
+        myRb.gravityScale = 0;
+        myRb.velocity = new Vector2(transform.localScale.x * dashForce, 0); // Dash in the facing direction
+
+        yield return new WaitForSeconds(dashDuration);
+
+        myRb.gravityScale = originalGravity;
+        isDashing = false;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!isGrounded)
+        {
+            isGrounded = true;
+            jumpCount = 0; // Reset jump count when grounded
+            canDash = true; // Reset dash ability
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
     {
         isGrounded = false;
     }
 
-    IEnumerator SecondaryJump()
+    private void UpdateAnimations()
     {
-        secondaryJump = true;
-        yield return new WaitForSeconds(secondaryJumpTime); // wait for a certain amount of time
-        secondaryJump = false;
-        //yield return null;
+        // Handle fall animation
+        if (!isGrounded && myRb.velocity.y < 0)
+        {
+            anim.SetBool("Fall", true);
+        }
+        else
+        {
+            anim.SetBool("Fall", false);
+        }
     }
 }

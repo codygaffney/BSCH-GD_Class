@@ -274,9 +274,9 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 1.27
-  m_AngularDrag: 0.05
-  m_GravityScale: 6
+  m_LinearDrag: 1
+  m_AngularDrag: 1
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -300,15 +300,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca9c5365f9b11a447bf462b4c71b21a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 8
-  acceleration: 6
+  maxSpeed: 10
+  acceleration: 8
+  sprintMultiplier: 1.5
+  jumpForce: 10
+  maxJumpCount: 2
+  dashForce: 10
+  dashDuration: 0.2
   myRb: {fileID: 7872447164491810039}
-  jumpForce: 18
-  isGrounded: 1
-  secondaryJumpForce: 3
-  secondaryJumpTime: 0.4
-  secondaryJump: 0
   anim: {fileID: 209211608037515354}
+  isGrounded: 1
 --- !u!61 &7294629110766792107
 BoxCollider2D:
   m_ObjectHideFlags: 0
