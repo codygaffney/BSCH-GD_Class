@@ -8,15 +8,21 @@ TagManager:
   - Start
   - Checkpoint
   - Spike
+  - Ground
+  - Trap
+  - Enemy
+  - JumpBoostItem
+  - DoubleJumpItem
+  - DashItem
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
-  - 
-  - 
+  - Platforms
+  - Characters
   - 
   - 
   - 

@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public class EnemyNavMeshAI : MonoBehaviour
 {
     public Transform player;
-    //public Animator animator;
+    public Animator animator;
     public NavMeshAgent agent;
     public float currentVelocity;
     private bool aggro;
@@ -21,15 +21,15 @@ public class EnemyNavMeshAI : MonoBehaviour
 
     public float aggroSpeed;
 
-    //public GameObject aggroUI;
+    public GameObject aggroUI;
     // Start is called before the first frame update
     void Start()
     {
-        //animator = GetComponentInChildren<Animator>();
+        animator = GetComponentInChildren<Animator>();
         agent = GetComponent<NavMeshAgent>();
         aggro = false;
         destinationReached = true;
-        //aggroUI.SetActive(false);
+        aggroUI.SetActive(false);
     }
 
     // Update is called once per frame
@@ -38,18 +38,18 @@ public class EnemyNavMeshAI : MonoBehaviour
         // Get the velocity of the enemy
         currentVelocity = agent.velocity.magnitude;
         // Set the speed of the animator to the velocity of the enemy
-        //animator.SetFloat("velocity", currentVelocity);
+        animator.SetFloat("velocity", currentVelocity);
 
         if (aggro == true)
         {
-            //aggroUI.SetActive(true);
+            aggroUI.SetActive(true);
             // Move towards the player using navmesh
             agent.destination = player.position;
         }
 
         if (aggro == false && destinationReached == true)
         {
-            //aggroUI.SetActive(false);
+            aggroUI.SetActive(false);
             destinationReached = false;
             agent.speed = patrolSpeed;
             // Move towards the patrol points using navmesh

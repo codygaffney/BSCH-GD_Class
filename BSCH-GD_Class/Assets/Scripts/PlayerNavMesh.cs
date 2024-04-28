@@ -14,7 +14,7 @@ public class PlayerNavMesh : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        //animator = GetComponentInChildren<Animator>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
@@ -23,7 +23,7 @@ public class PlayerNavMesh : MonoBehaviour
         //get the velocity of the player
         currentVelocity = agent.velocity.magnitude;
         //set the speed of the animator to the velocity of the player
-        //animator.SetFloat("velocity", currentVelocity);
+        animator.SetFloat("velocity", currentVelocity);
 
         //move towards the mouseclick using navmesh
         if (Input.GetMouseButtonDown(0))
