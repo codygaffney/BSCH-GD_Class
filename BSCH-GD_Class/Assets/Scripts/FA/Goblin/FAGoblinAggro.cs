@@ -4,15 +4,28 @@ using UnityEngine;
 
 public class FAGoblinAggro : MonoBehaviour
 {
-    Animator goblinAnimator;
+    private Animator goblinAnimator;
 
-    void Start()
+    private void Start()
     {
-        // Assuming there is only one Goblin, otherwise, you'll need a different way to ensure you reference the right one.
-        goblinAnimator = GameObject.FindObjectOfType<FAGoblin>().GetComponent<Animator>();
-        if (goblinAnimator == null)
+        // Find all spawners and subscribe to the correct one
+        foreach (var spawner in FindObjectsOfType<FAEnemySpawner>())
         {
-            Debug.LogError("Goblin's Animator not found!");
+            if (spawner.enemyPrefab.GetComponent<FAGoblin>() != null)  // Check if the prefab is a goblin
+            {
+                spawner.OnEnemySpawned += HandleBossSummoned;
+                break;  // Assuming only one goblin spawner exists
+            }
+        }
+    }
+
+    private void HandleBossSummoned(GameObject boss)
+    {
+        // Access the Animator from the summoned boss
+        if (boss.GetComponent<FAGoblin>() != null)  // Verify it's the goblin
+        {
+            goblinAnimator = boss.GetComponent<Animator>();
+            goblinAnimator.SetBool("IsRunning", true);  // Start running if needed
         }
     }
 

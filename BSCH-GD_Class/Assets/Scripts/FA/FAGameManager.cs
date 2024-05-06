@@ -9,6 +9,9 @@ public class FAGameManager : MonoBehaviour
     public float maxHealth;
     public Transform spawnPoint;
 
+    public bool IsSkeletonDead = false;
+    public bool IsGoblinDead = false;
+
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);

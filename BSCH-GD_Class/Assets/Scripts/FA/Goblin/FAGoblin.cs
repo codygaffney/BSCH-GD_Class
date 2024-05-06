@@ -20,9 +20,8 @@ public class FAGoblin : FABaseEnemy
     public LayerMask attackMask;
 
     private FAGameManager gameManager;
-    public static bool IsGoblinDead = false;
 
-    void Start()
+    public override void Start()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<FAGameManager>();
         animator = this.GetComponent<Animator>();
@@ -30,6 +29,7 @@ public class FAGoblin : FABaseEnemy
         {
             Debug.LogError("Failed to find the GameManager with FAGameManager component.");
         }
+        base.Start();
     }
 
     public void Attack1()
@@ -105,7 +105,7 @@ public class FAGoblin : FABaseEnemy
     protected override void Die()
     {
         //Instantiate(deathEffect, transform.position, Quaternion.identity);
-        IsGoblinDead = true;
+        gameManager.IsGoblinDead = true;
         base.Die();
     }
 }

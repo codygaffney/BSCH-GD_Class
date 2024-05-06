@@ -9,9 +9,12 @@ public class FAJumpChest : MonoBehaviour
     public GameObject promptDisplay;
     public Vector3 promptOffset = new Vector3(0, 2.0f, 0);
 
+    public FAGameManager gameManager;
+
 
     void Start()
     {
+        gameManager = FindAnyObjectByType<FAGameManager>();
         if (promptDisplay != null)
         {
             promptDisplay.SetActive(false);  // Initially hide the prompt
@@ -20,7 +23,14 @@ public class FAJumpChest : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (this.CompareTag("DoubleJumpItem") && !FAGoblin.IsGoblinDead)
+        if (this.CompareTag("DoubleJumpItem") && !gameManager.IsGoblinDead)
+        {
+            
+            promptDisplay.GetComponentInChildren<TMP_Text>().text = "Locked!";
+            UpdatePromptPosition();
+            DisplayPrompt(true);
+        }
+        else if (this.CompareTag("DashItem") && !gameManager.IsSkeletonDead)
         {
             promptDisplay.GetComponentInChildren<TMP_Text>().text = "Locked!";
             UpdatePromptPosition();
@@ -28,9 +38,10 @@ public class FAJumpChest : MonoBehaviour
         }
         else
         {
-            promptDisplay.GetComponentInChildren<TMP_Text>().text = "Press 'f'";
+            promptDisplay.GetComponentInChildren<TMP_Text>().text = "Press 'F'";
             UpdatePromptPosition();
             DisplayPrompt(true);
+            Debug.Log("Press F");
         }
     }
 
@@ -62,10 +73,14 @@ public class FAJumpChest : MonoBehaviour
     // Function to open chest now includes a collider parameter to check the tag of the interacting object
     public void OpenChest()
     {
-        if (this.CompareTag("DoubleJumpItem") && !FAGoblin.IsGoblinDead)
+        if (this.CompareTag("DoubleJumpItem") && !gameManager.IsGoblinDead)
         {
             Debug.Log("Double Jump is locked. Defeat the Goblin first!");
             return;  // Prevent opening the chest if the Goblin is not defeated
+        }
+        else if(this.CompareTag("DashItem") && !gameManager.IsSkeletonDead)
+        {
+            return;
         }
 
         string unlockedItem = "";  // Default empty string for the unlocked item

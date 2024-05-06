@@ -31,10 +31,13 @@ public class FACharacterControllerScript : MonoBehaviour
     public bool hasDJKey = false;
     public Collider2D playerCollider;
 
+    public FAGameManager gameManager;
+
     void Start()
     {
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        gameManager = FindAnyObjectByType<FAGameManager>();
     }
 
     void Update()
@@ -56,6 +59,10 @@ public class FACharacterControllerScript : MonoBehaviour
             interactionPrompt.SetActive(true);
         }
         else if (currentInteractableItem != null && (currentInteractableItem.CompareTag("DoubleJumpItem") && !canDoubleJumpAbility && hasDJKey))
+        {
+            getKeyPrompt.SetActive(true);
+        }
+        else if (currentInteractableItem != null && (currentInteractableItem.CompareTag("DashItem") && !canDash))
         {
             getKeyPrompt.SetActive(true);
         }
@@ -299,7 +306,7 @@ public class FACharacterControllerScript : MonoBehaviour
             }
             else if (currentInteractableItem.CompareTag("DoubleJumpItem"))
             {
-                if (FAGoblin.IsGoblinDead)
+                if (gameManager.IsGoblinDead)
                 {
                     chestAnimator.SetBool("IsActive", true);
                     chestScript.OpenChest();
@@ -308,9 +315,12 @@ public class FACharacterControllerScript : MonoBehaviour
             }
             else if (currentInteractableItem.CompareTag("DashItem"))
             {
-                chestAnimator.SetBool("IsActive", true);
-                chestScript.OpenChest();
-                EnableDash();
+                if(gameManager.IsSkeletonDead)
+                {
+                    chestAnimator.SetBool("IsActive", true);
+                    chestScript.OpenChest();
+                    EnableDash();
+                }
             }
 
             // Optionally clear the current interactable item if the interaction concludes it (depends on game design)

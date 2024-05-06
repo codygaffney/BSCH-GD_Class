@@ -2637,7 +2637,7 @@ MonoBehaviour:
   agent: {fileID: 1106414250}
   currentVelocity: 0
   destinationReached: 0
-  destinationThreshold: 10
+  destinationThreshold: 5
   patrolPoints:
   - {fileID: 2032411929}
   - {fileID: 2015616921}
@@ -2645,7 +2645,7 @@ MonoBehaviour:
   aggroTimer: 5
   patrolSpeed: 15
   aggroSpeed: 5
-  aggroUI: {fileID: 0}
+  aggroUI: {fileID: 608221882317514241, guid: 21eb00f0e2f755a44970e5972b006ed2, type: 3}
 --- !u!195 &1106414250
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -5619,7 +5619,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 100
-  field of view: 81.9
+  field of view: 122.9
   orthographic: 0
   orthographic size: 5
   m_Depth: -1

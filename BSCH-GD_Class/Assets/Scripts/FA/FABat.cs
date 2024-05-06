@@ -25,13 +25,14 @@ public class FABat : FABaseEnemy
         Retreating
     }
 
-    void Start()
+    public override void Start()
     {
         originalPosition = transform.position;
         player = GameObject.FindGameObjectWithTag("Player").transform;
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<FAGameManager>();
         SetNewPatrolTarget();
         currentState = State.Patrolling;
+        base.Start();
     }
 
     void Update()

@@ -26,7 +26,6 @@ public class BossRun : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Debug.Log($"Current Time: {Time.time}, Next Attack Time: {nextAttackTime}");
 
         boss.LookAtPlayer();
 
@@ -36,7 +35,6 @@ public class BossRun : StateMachineBehaviour
 
         if (Time.time >= nextAttackTime && Vector2.Distance(player.position, rb.position) <= attackRange)
         {
-            Debug.Log("Attack Triggered");
             animator.SetTrigger("Attack1");
             nextAttackTime = Time.time + attackCooldown;  // Update nextAttackTime to current time + cooldown duration
         }
